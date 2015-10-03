@@ -1,9 +1,4 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="MainWindow.xaml.cs" company="Microsoft">
-//     Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-//------------------------------------------------------------------------------
-
+﻿
 namespace Microsoft.Samples.Kinect.BodyIndexBasics
 {
     using System;
@@ -17,12 +12,22 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
     using System.Windows.Media.Imaging;
     using Microsoft.Kinect;
     using System.Text;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Interaction logic for the MainWindow
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+
+        // body reader and list of bodies
+        private BodyFrameReader bodyFrameReader = null;
+        private Body[] bodies = null;
+        private int bodycount;
+        private Joint[] joints = null;
+
+        private CoordinateMapper coordinateMapper = null;
+
         /// <summary>
         /// Size of the RGB pixel in the bitmap
         /// </summary>
@@ -79,6 +84,16 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             // get the kinectSensor object
             this.kinectSensor = KinectSensor.GetDefault();
 
+            coordinateMapper = kinectSensor.CoordinateMapper;
+            // get body count
+            this.bodycount = this.kinectSensor.BodyFrameSource.BodyCount;
+
+            this.bodyFrameReader = this.kinectSensor.BodyFrameSource.OpenReader();
+            this.bodyFrameReader.FrameArrived += this.Reader_BodyFrameArrived;
+
+            // set length of body array
+            this.bodies = new Body[this.bodycount];
+
             // open the reader for the depth frames
             this.bodyIndexFrameReader = this.kinectSensor.BodyIndexFrameSource.OpenReader();
 
@@ -108,7 +123,94 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
             // initialize the components (controls) of the window
             this.InitializeComponent();
+
+
         }
+
+        private void Reader_BodyFrameArrived(object sender, BodyFrameArrivedEventArgs e) {
+
+
+            using (BodyFrame bodyFrame = e.FrameReference.AcquireFrame())
+            {
+                if (bodyFrame != null)
+                {
+                    bodyFrame.GetAndRefreshBodyData(this.bodies);
+                    
+
+                    for (int i = 0; i < this.bodycount; i++)
+                    {
+                        Joint rightHand = bodies[i].Joints[JointType.HandRight];
+                        Joint leftHand = bodies[i].Joints[JointType.HandLeft];
+                        Joint rightFoot = bodies[i].Joints[JointType.FootRight];
+                        Joint leftFoot = bodies[i].Joints[JointType.FootLeft];
+                        Joint head = bodies[i].Joints[JointType.Head];
+
+                        //joints = [rightHand, leftHand, rightFoot, leftFoot, head];
+                        System.Diagnostics.Debug.Write(head.Position.X);
+                        CheckBubbleCollision(rightHand, leftHand, rightFoot, leftFoot, head);
+
+                    }
+                }
+            }
+
+        }
+
+        private void CheckBubbleCollision(Joint rightHand, Joint leftHand, Joint rightFoot, Joint leftFoot, Joint head)
+        {
+            //           for (int i = 0; i < joints.Length; i++)
+            //         {
+            //           CameraSpacePoint position = joints[i].Position;
+
+            //         ColorSpacePoint colorSpacePoint = this.coordinateMapper.MapCameraPointToColorSpace(position);
+            //   }
+
+            // get camera positions of joints
+            CameraSpacePoint rightHandPos = rightHand.Position;
+
+            double rightHandX = rightHand.Position.X;
+            double rightHandY = rightHand.Position.Y;
+            double rightFootX = rightFoot.Position.X;
+            double rightFootY = rightFoot.Position.Y;
+            double leftHandX = leftHand.Position.X;
+            double leftHandY = leftHand.Position.Y;
+            double leftFootX = leftFoot.Position.X;
+            double leftFootY = leftFoot.Position.Y;
+            double headX = head.Position.X;
+            double headY = head.Position.Y;
+            var x = this.coordinateMapper.MapCameraPointToColorSpace(rightHandPos).X;
+
+            var y = this.coordinateMapper.MapCameraPointToColorSpace(rightHandPos).Y;
+            Debug.WriteLine("X = " + x + " - Y = " + y);
+            if (x >= 950 && x <= 1000 && y >= 175 && y <= 225)
+            {
+                top.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            if (x >= 1225 && x <= 1275 && y >= 125 && y <= 175)
+            {
+                topRight.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            if (x >= 680 && x <= 730 && y >= 130 && y <= 180)
+            {
+                topLeft.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            if (x >= 950 && x <= 1000 && y >= 175 && y <= 225)
+            {
+                right.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            if (x >= 675 && x <= 725 && y >= 575 && y <= 625)
+            {
+                left.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            if (x >= 950 && x <= 1000 && y >= 175 && y <= 225)
+            {
+                bottomRight.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            if (x >= 685 && x <= 735 && y >= 805 && y <= 855)
+            {
+                bottomLeft.Visibility = System.Windows.Visibility.Collapsed;
+            }
+        }
+
 
         /// <summary>
         /// INotifyPropertyChangedPropertyChanged event to allow window controls to bind to changeable data
@@ -150,6 +252,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 }
             }
         }
+
 
         /// <summary>
         /// Execute shutdown tasks
@@ -207,6 +310,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             {
                 this.RenderBodyIndexPixels();
             }
+            
         }
 
         /// <summary>

@@ -80,11 +80,14 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         /// </summary>
         private string statusText = null;
 
+        private int frameCount = 0;
+
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
         /// </summary>
         public MainWindow()
         {
+
             // get the kinectSensor object
             this.kinectSensor = KinectSensor.GetDefault();
 
@@ -155,7 +158,41 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     }
                 }
             }
-        }
+
+            if (frameCount%15 == 0)
+            {
+                Random random = new Random();
+                int randomNumber = random.Next(0, 7);
+                switch (randomNumber)
+                {
+                    case 0:
+                        top.Visibility = System.Windows.Visibility.Visible;
+                        break;
+                    case 1:
+                        topRight.Visibility = System.Windows.Visibility.Visible;
+                        break;
+                    case 2:
+                        topLeft.Visibility = System.Windows.Visibility.Visible;
+                        break;
+                    case 3:
+                        left.Visibility = System.Windows.Visibility.Visible;
+                        break;
+                    case 4:
+                        right.Visibility = System.Windows.Visibility.Visible;
+                        break;
+                    case 5:
+                        bottomRight.Visibility = System.Windows.Visibility.Visible;
+                        break;
+                    case 6:
+                        bottomLeft.Visibility = System.Windows.Visibility.Visible;
+                        break;
+                }
+                frameCount = 0;
+            }
+            frameCount++;
+
+
+            }
 
         private void CheckBubbleCollision(Joint rightHand, Joint leftHand, Joint rightFoot, Joint leftFoot, Joint head)
         {
@@ -169,31 +206,31 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 double x = this.coordinateMapper.MapCameraPointToColorSpace(j).X;
                 double y = this.coordinateMapper.MapCameraPointToColorSpace(j).Y;
                 
-                if (x >= 960 && x <= 1015 && y >= 0 && y <= 310)
+                if (x >= 940 && x <= 1045 && y >= 0 && y <= 310)
                 {
                     top.Visibility = System.Windows.Visibility.Collapsed;
                 }
-                if (x >= 1200 && x <= 1600 && y >= 310 && y <= 445)
+                if (x >= 1200 && x <= 1600 && y >= 310 && y <= 430)
                 {
                     topRight.Visibility = System.Windows.Visibility.Collapsed;
                 }
-                if (x >= 0 && x <= 750 && y >= 310 && y <= 445)
+                if (x >= 0 && x <= 750 && y >= 310 && y <= 430)
                 {
                     topLeft.Visibility = System.Windows.Visibility.Collapsed;
                 }
-                if (x >= 1200 && x <= 1600 && y >= 445 && y <= 750)
+                if (x >= 1200 && x <= 1600 && y >= 460 && y <= 735)
                 {
                     right.Visibility = System.Windows.Visibility.Collapsed;
                 }
-                if (x >= 0 && x <= 750 && y >= 445 && y <= 750)
+                if (x >= 0 && x <= 750 && y >= 460 && y <= 735)
                 {
                     left.Visibility = System.Windows.Visibility.Collapsed;
                 }
-                if (x >= 1200 && x <= 1600 && y >= 750 && y <= 1050)
+                if (x >= 1200 && x <= 1600 && y >= 765 && y <= 1050)
                 {
                     bottomRight.Visibility = System.Windows.Visibility.Collapsed;
                 }
-                if (x >= 0 && x <= 750 && y >= 750 && y <= 1050)
+                if (x >= 0 && x <= 750 && y >= 765 && y <= 1050)
                 {
                     bottomLeft.Visibility = System.Windows.Visibility.Collapsed;
                 }
@@ -339,6 +376,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             var uri = new Uri("C:\\Users\\LabLaptop\\Documents\\HackathonProject\\YorkhillChildrensHospitalKinect\\Audio files\\burst a beat theme.mp3");
             player.Open(uri);
             player.Play();
+            testBubble.Play();
         }
 
         /// <summary>

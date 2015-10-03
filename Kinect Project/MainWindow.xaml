@@ -35,5 +35,6 @@
         <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Right" Height="55" Margin="0,386,163,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="55" Name="bottomRight"/>
         <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="55" Margin="145,252,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="55" Name="left"/>
         <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="55" Margin="454,252,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="55" Name="right"/>
+        <MediaElement x:Name="testBubble" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="100" Source="Images/Bubble.gif" RenderTransformOrigin="2.885,2.133" Margin="303,341,0,0" Grid.Row="1" LoadedBehavior="Play" UnloadedBehavior="Manual"/>
     </Grid>
 </Window>

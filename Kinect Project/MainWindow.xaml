@@ -1,0 +1,39 @@
+﻿<Window x:Class="Microsoft.Samples.Kinect.BodyIndexBasics.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Burst a Beat" 
+        Height="800" Width="700" 
+        Closing="MainWindow_Closing">
+    <Window.Resources>
+        <SolidColorBrush x:Key="MediumGreyBrush" Color="#ff6e6e6e" />
+        <SolidColorBrush x:Key="KinectPurpleBrush" Color="#ff52318f" />
+        <SolidColorBrush x:Key="KinectBlueBrush" Color="#ff00BCF2" />
+        <Style TargetType="{x:Type Image}">
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+        </Style>
+    </Window.Resources>
+    <Grid Margin="10,0,10,35">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="500" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" Margin="0 0 0 20">
+            <Image DockPanel.Dock="Left" Source="Images\Logo.png" Stretch="Fill" Height="50" Width="140" Margin="0 10 0 5" />
+        </DockPanel>
+        <Viewbox Grid.Row="1" HorizontalAlignment="Center">
+            <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />
+        </Viewbox>
+        <StatusBar Grid.Row="3" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource MediumGreyBrush}">
+            <StatusBarItem Content="{Binding StatusText}" />
+        </StatusBar>
+        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="55" Margin="145,386,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="55" Name="bottomLeft"/>
+        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="55" Margin="179,144,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="55" Name="topLeft"/>
+        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="55" Margin="303,78,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="55" Name="top"/>
+        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="55" Margin="424,0,0,302" Grid.Row="1" Stroke="Black" VerticalAlignment="Bottom" Width="55" Name="topRight" RenderTransformOrigin="0.588,1.797"/>
+        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Right" Height="55" Margin="0,386,163,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="55" Name="bottomRight"/>
+        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="55" Margin="145,252,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="55" Name="left"/>
+        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="55" Margin="454,252,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="55" Name="right"/>
+    </Grid>
+</Window>

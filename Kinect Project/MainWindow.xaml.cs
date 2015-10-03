@@ -33,12 +33,12 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         /// </summary>
         private static readonly uint[] BodyColor =
         {
-            0x000000,
-            0x000000,
-            0x000000,
-            0x000000,
-            0x000000,
-            0x000000,
+            0xFFFFFF,
+            0xFFFFFF,
+            0xFFFFFF,
+            0xFFFFFF,
+            0xFFFFFF,
+            0xFFFFFF,
         };
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 else
                 {
                     // this pixel is not part of a player
-                    this.bodyIndexPixels[i] = 0xE0EEEE;
+                    this.bodyIndexPixels[i] = 0x0000000;
                 }
             }
         }

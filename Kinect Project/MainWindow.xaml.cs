@@ -82,11 +82,16 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
         private int frameCount = 0;
 
+        private int numberOfHitsCount = 0;
+
+        private int colorAt = 0;
+
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
         /// </summary>
         public MainWindow()
         {
+            PlaySound(player);
 
             // get the kinectSensor object
             this.kinectSensor = KinectSensor.GetDefault();
@@ -131,7 +136,13 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             // initialize the components (controls) of the window
             this.InitializeComponent();
 
-            PlaySound(player);
+            top.Visibility = System.Windows.Visibility.Collapsed;
+            topRight.Visibility = System.Windows.Visibility.Collapsed;
+            topLeft.Visibility = System.Windows.Visibility.Collapsed;
+            right.Visibility = System.Windows.Visibility.Collapsed;
+            left.Visibility = System.Windows.Visibility.Collapsed;
+            bottomRight.Visibility = System.Windows.Visibility.Collapsed;
+            bottomLeft.Visibility = System.Windows.Visibility.Collapsed;
 
 
         }
@@ -159,7 +170,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 }
             }
 
-            if (frameCount%15 == 0)
+            if (frameCount%45 == 0)
             {
                 Random random = new Random();
                 int randomNumber = random.Next(0, 7);
@@ -206,33 +217,40 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 double x = this.coordinateMapper.MapCameraPointToColorSpace(j).X;
                 double y = this.coordinateMapper.MapCameraPointToColorSpace(j).Y;
                 
-                if (x >= 940 && x <= 1045 && y >= 0 && y <= 310)
+                if (x >= 940 && x <= 1045 && y >= 0 && y <= 310 && top.Visibility == System.Windows.Visibility.Visible)
                 {
                     top.Visibility = System.Windows.Visibility.Collapsed;
+                    numberOfHitsCount++;
                 }
-                if (x >= 1200 && x <= 1600 && y >= 310 && y <= 430)
+                if (x >= 1200 && x <= 1600 && y >= 310 && y <= 430 && topRight.Visibility == System.Windows.Visibility.Visible)
                 {
                     topRight.Visibility = System.Windows.Visibility.Collapsed;
+                    numberOfHitsCount++;
                 }
-                if (x >= 0 && x <= 750 && y >= 310 && y <= 430)
+                if (x >= 0 && x <= 750 && y >= 310 && y <= 430 && topLeft.Visibility == System.Windows.Visibility.Visible)
                 {
                     topLeft.Visibility = System.Windows.Visibility.Collapsed;
+                    numberOfHitsCount++;
                 }
-                if (x >= 1200 && x <= 1600 && y >= 460 && y <= 735)
+                if (x >= 1200 && x <= 1600 && y >= 460 && y <= 735 && right.Visibility == System.Windows.Visibility.Visible)
                 {
                     right.Visibility = System.Windows.Visibility.Collapsed;
+                    numberOfHitsCount++;
                 }
-                if (x >= 0 && x <= 750 && y >= 460 && y <= 735)
+                if (x >= 0 && x <= 750 && y >= 460 && y <= 735 && left.Visibility == System.Windows.Visibility.Visible)
                 {
                     left.Visibility = System.Windows.Visibility.Collapsed;
+                    numberOfHitsCount++;
                 }
-                if (x >= 1200 && x <= 1600 && y >= 765 && y <= 1050)
+                if (x >= 1200 && x <= 1600 && y >= 765 && y <= 1050 && bottomRight.Visibility == System.Windows.Visibility.Visible)
                 {
                     bottomRight.Visibility = System.Windows.Visibility.Collapsed;
+                    numberOfHitsCount++;
                 }
-                if (x >= 0 && x <= 750 && y >= 765 && y <= 1050)
+                if (x >= 0 && x <= 750 && y >= 765 && y <= 1050 && bottomLeft.Visibility == System.Windows.Visibility.Visible)
                 {
                     bottomLeft.Visibility = System.Windows.Visibility.Collapsed;
+                    numberOfHitsCount++;
                 }
             }
 
@@ -350,6 +368,10 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         /// <param name="bodyIndexFrameDataSize">Size of the BodyIndexFrame image data</param>
         private unsafe void ProcessBodyIndexFrameData(IntPtr bodyIndexFrameData, uint bodyIndexFrameDataSize)
         {
+
+            uint[] colors = new uint[] { 0xE0EEEE, 0xFF3300, 0x47D147, 0x3366FF, 0xFFFF00, 0xFF00FF };
+            int numberOfColors = 6;
+
             byte* frameData = (byte*)bodyIndexFrameData;
 
             // convert body index to a visual representation
@@ -366,7 +388,17 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 else
                 {
                     // this pixel is not part of a player
-                    this.bodyIndexPixels[i] = 0xE0EEEE;
+                    if (numberOfHitsCount == 10)
+                    {
+                        colorAt++;
+                        numberOfHitsCount = 0;
+                    }
+                    if (colorAt >= numberOfColors)
+                    {
+                        colorAt = 0;
+                    }
+                
+                    this.bodyIndexPixels[i] = colors[colorAt];
                 }
             }
         }

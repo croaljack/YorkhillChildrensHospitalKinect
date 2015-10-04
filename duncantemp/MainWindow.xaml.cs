@@ -33,7 +33,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
         //global soundplayer constructor
         MediaPlayer player = new MediaPlayer();
-        public System.Windows.Shapes.Ellipse[] VisibleBubbles = new System.Windows.Shapes.Ellipse[6];
+        public System.Windows.Shapes.Ellipse[] VisibleBubbles = new System.Windows.Shapes.Ellipse[7];
 
         public int[] bubbleSequence = { 39, 127, 216, 325, 402, 435, 482, 569, 742, 785, 829, 872, 917, 961, 982, 1027, 1050, 1104, 1126, 1127, 1181, 1225, 1268, 1312, 1334, 1378, 1399, 1440, 1481, 1519, 1559, 1592, 1660 ,1694
  };
@@ -231,12 +231,28 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
         private void CreateBubble()
         {
-            //Random random = new Random();
-            //int randomNumber = random.Next(0, 7);
-            int randomNumber = randomNumberChooser();
+
+                Random random = new Random();
+                int randomNumber = random.Next(0, 7);
+            System.Diagnostics.Debug.WriteLine(randomNumber);
+            
+                if (VisibleBubbles[randomNumber] != null)
+                {
+                while(VisibleBubbles[randomNumber].Visibility == System.Windows.Visibility.Visible) { 
+                    if (randomNumber == 6)
+                    {
+                        randomNumber = 0;
+                    }
+                    else
+                    {
+                        randomNumber++;
+                    }
+                }
+                } 
+                
                 switch (randomNumber)
                 {
-                    case 0:
+                   case 0:
                         if (top.Visibility != System.Windows.Visibility.Visible)
                         {
                             circlesUp++;
@@ -327,7 +343,6 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         topRight.Visibility = System.Windows.Visibility.Collapsed;
                         circlesUp--;
                         numberOfHitsCount++;
-                        
                     }
                     if (x >= 0 && x <= 750 && y >= 310 && y <= 430 && topLeft.Visibility == System.Windows.Visibility.Visible)
                     {
@@ -359,8 +374,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         circlesUp--;
                         numberOfHitsCount++;
                     }
-                Score.Content = numberOfHitsCount.ToString();
-            }
+                }
             
 
         }
@@ -514,7 +528,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
         private void PlaySound(MediaPlayer player)
         {
-            var uri = new Uri("C:\\Users\\LabLaptop\\Documents\\HackathonProject\\YorkhillChildrensHospitalKinect\\Kinect Project\\audioFiles\\burst a beat theme.mp3");
+            var uri = new Uri("C:\\Users\\Jack\\Documents\\Uni\\Year 3\\October Hackathon\\YorkhillChildrensHospitalKinect\\Audio files\\burst a beat theme.mp3");
             player.Open(uri);
             player.Play();
             //testBubble.Play();
@@ -534,30 +548,6 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             b.Height = 2;
             b.Width = 2;
             b.Opacity = 1.0;
-        }
-
-        int randomNumberChooser()
-        {
-            Random random = new Random();
-            int randomNumber = random.Next(0, 7);
-            try
-            {
-                if (VisibleBubbles[randomNumber] == null)
-                {
-                    return randomNumber;
-                }
-                if (VisibleBubbles[randomNumber].Visibility != System.Windows.Visibility.Visible)
-                {
-                    return randomNumber;
-                }
-                else {
-                    return randomNumberChooser();
-                }
-            }
-            catch
-            {
-                return randomNumberChooser();
-            }
         }
 
         private void BubbleShaper(System.Windows.Shapes.Ellipse[] visible)

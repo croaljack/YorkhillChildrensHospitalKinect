@@ -91,6 +91,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private int frameCount = 0;
 
         private int numberOfHitsCount = 0;
+        private int displayCount = 0;
 
         private int colorAt = 0;
 
@@ -320,6 +321,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         top.Visibility = System.Windows.Visibility.Collapsed;
                         circlesUp--;
                         numberOfHitsCount++;
+                        displayCount++;
                         bubbleHit(top);
                     }
                     if (x >= 1200 && x <= 1600 && y >= 310 && y <= 430 && topRight.Visibility == System.Windows.Visibility.Visible)
@@ -327,39 +329,45 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         topRight.Visibility = System.Windows.Visibility.Collapsed;
                         circlesUp--;
                         numberOfHitsCount++;
-                        
-                    }
+                        displayCount++;
+
+                }
                     if (x >= 0 && x <= 750 && y >= 310 && y <= 430 && topLeft.Visibility == System.Windows.Visibility.Visible)
                     {
                         topLeft.Visibility = System.Windows.Visibility.Collapsed;
                         circlesUp--;
                         numberOfHitsCount++;
-                    }
+                        displayCount++;
+                }
                     if (x >= 1200 && x <= 1600 && y >= 460 && y <= 735 && right.Visibility == System.Windows.Visibility.Visible)
                     {
                         right.Visibility = System.Windows.Visibility.Collapsed;
                         circlesUp--;
                         numberOfHitsCount++;
-                    }
+                        displayCount++;
+                }
                     if (x >= 0 && x <= 750 && y >= 460 && y <= 735 && left.Visibility == System.Windows.Visibility.Visible)
                     {
                         left.Visibility = System.Windows.Visibility.Collapsed;
                         circlesUp--;
                         numberOfHitsCount++;
-                    }
+                        displayCount++;
+                }
                     if (x >= 1200 && x <= 1600 && y >= 765 && y <= 1050 && bottomRight.Visibility == System.Windows.Visibility.Visible)
                     {
                         bottomRight.Visibility = System.Windows.Visibility.Collapsed;
                         circlesUp--;
                         numberOfHitsCount++;
-                    }
+                        displayCount++;
+                }
                     if (x >= 0 && x <= 750 && y >= 765 && y <= 1050 && bottomLeft.Visibility == System.Windows.Visibility.Visible)
                     {
                         bottomLeft.Visibility = System.Windows.Visibility.Collapsed;
                         circlesUp--;
                         numberOfHitsCount++;
-                    }
-                Score.Content = numberOfHitsCount.ToString();
+                        displayCount++;
+                }
+                Score.Content = displayCount.ToString();
             }
             
 

@@ -242,7 +242,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         {
                             circlesUp++;
                             top.Visibility = System.Windows.Visibility.Visible;
+                        try {
                             VisibleBubbles[circlesUp - 1] = top;
+                        } catch { IndexOutOfRangeException e0; }
                         }
 
                         break;
@@ -251,7 +253,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         {
                             circlesUp++;
                             topRight.Visibility = System.Windows.Visibility.Visible;
+                        try {
                             VisibleBubbles[circlesUp - 1] = topRight;
+                        } catch { IndexOutOfRangeException e1; }
                     }
 
                         break;
@@ -260,7 +264,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         {
                             circlesUp++;
                             topLeft.Visibility = System.Windows.Visibility.Visible;
+                        try {
                             VisibleBubbles[circlesUp - 1] = topLeft;
+                        } catch { IndexOutOfRangeException e2; }
                     }
 
                         break;
@@ -269,7 +275,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         {
                             circlesUp++;
                             left.Visibility = System.Windows.Visibility.Visible;
-                            VisibleBubbles[circlesUp - 1] = left;
+                        try {
+                            VisibleBubbles[circlesUp-1] = left;
+                        } catch { IndexOutOfRangeException e3; }
                     }
 
                         break;
@@ -277,8 +285,10 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         if (right.Visibility != System.Windows.Visibility.Visible)
                         {
                             circlesUp++;
-                            right.Visibility = System.Windows.Visibility.Visible;
-                            VisibleBubbles[circlesUp -1] = right;
+                        right.Visibility = System.Windows.Visibility.Visible;
+                         try {
+                            VisibleBubbles[circlesUp-1] = right;
+                        } catch { IndexOutOfRangeException e4;}
                     }
 
                         break;
@@ -287,7 +297,10 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         {
                             circlesUp++;
                             bottomRight.Visibility = System.Windows.Visibility.Visible;
+                        try
+                        {
                             VisibleBubbles[circlesUp-1] = bottomRight;
+                        } catch { IndexOutOfRangeException e5; }
                     }
 
                         break;
@@ -296,7 +309,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         {
                             circlesUp++;
                             bottomLeft.Visibility = System.Windows.Visibility.Visible;
-                            VisibleBubbles[circlesUp -1] = bottomLeft;
+                        try {
+                            VisibleBubbles[circlesUp-1] = bottomLeft;
+                        } catch { IndexOutOfRangeException e6; }
                     }
 
                         break;
@@ -486,7 +501,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private unsafe void ProcessBodyIndexFrameData(IntPtr bodyIndexFrameData, uint bodyIndexFrameDataSize)
         {
 
-            uint[] colors = new uint[] { 0xE0EEEE, 0xFF3300, 0x47D147, 0x3366FF, 0xFFFF00, 0xFF00FF };
+            uint[] colors = new uint[] { 0xE0E00E, 0xFF3300, 0x47D147, 0x3366FF, 0xFFFF00, 0xFF00FF };
             int numberOfColors = 6;
 
             byte* frameData = (byte*)bodyIndexFrameData;
@@ -531,14 +546,17 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private void bubbleHit(System.Windows.Shapes.Ellipse b)
         {
             int i = 0;
-            while ( VisibleBubbles[i] != b) {
-                i++;
+            try {
+                while (VisibleBubbles[i] != b) {
+                    i++;
+                }
+                while (VisibleBubbles[i] != null)
+                {
+                    VisibleBubbles[i] = VisibleBubbles[i + 1];
+                    i++;
+                }
             }
-            while (VisibleBubbles[i]!= null)
-            {
-                VisibleBubbles[i] = VisibleBubbles[i + 1];
-                i++;
-            }
+            catch { IndexOutOfRangeException e; }
             b.Height = 2;
             b.Width = 2;
             b.Opacity = 1.0;

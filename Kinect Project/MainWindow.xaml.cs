@@ -25,13 +25,14 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private Body[] bodies = null;
         private int bodycount;
 
+
         private CoordinateMapper coordinateMapper = null;
 
         private CameraSpacePoint[] positionArray = null;
 
         //global soundplayer constructor
         MediaPlayer player = new MediaPlayer();
-
+        public System.Windows.Shapes.Ellipse[] VisibleBubbles = new System.Windows.Shapes.Ellipse[6];
         /// <summary>
         /// Size of the RGB pixel in the bitmap
         /// </summary>
@@ -143,6 +144,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             // initialize the components (controls) of the window
             this.InitializeComponent();
 
+            PlaySound(player);
+
             top.Visibility = System.Windows.Visibility.Collapsed;
             topLeft.Visibility = System.Windows.Visibility.Collapsed;
             topRight.Visibility = System.Windows.Visibility.Collapsed;
@@ -152,6 +155,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             bottomLeft.Visibility = System.Windows.Visibility.Collapsed;
             gameOver.Visibility = System.Windows.Visibility.Collapsed;
 
+            
 
         }
 
@@ -192,7 +196,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                             start = 1;
                         }
 
-                        if (circlesUp < 3 && start == 1)
+                        if (circlesUp < 6 && start == 1)
                         {
                             CheckBubbleCollision(rightHand, leftHand, rightFoot, leftFoot, head);
                         }
@@ -221,6 +225,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         {
                             circlesUp++;
                             top.Visibility = System.Windows.Visibility.Visible;
+                            VisibleBubbles[circlesUp - 1] = top;
                         }
 
                         break;
@@ -229,7 +234,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         {
                             circlesUp++;
                             topRight.Visibility = System.Windows.Visibility.Visible;
-                        }
+                            VisibleBubbles[circlesUp - 1] = topRight;
+                    }
 
                         break;
                     case 2:
@@ -237,7 +243,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         {
                             circlesUp++;
                             topLeft.Visibility = System.Windows.Visibility.Visible;
-                        }
+                            VisibleBubbles[circlesUp - 1] = topLeft;
+                    }
 
                         break;
                     case 3:
@@ -245,7 +252,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         {
                             circlesUp++;
                             left.Visibility = System.Windows.Visibility.Visible;
-                        }
+                            VisibleBubbles[circlesUp - 1] = left;
+                    }
 
                         break;
                     case 4:
@@ -253,7 +261,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         {
                             circlesUp++;
                             right.Visibility = System.Windows.Visibility.Visible;
-                        }
+                            VisibleBubbles[circlesUp -1] = right;
+                    }
 
                         break;
                     case 5:
@@ -261,7 +270,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         {
                             circlesUp++;
                             bottomRight.Visibility = System.Windows.Visibility.Visible;
-                        }
+                            VisibleBubbles[circlesUp-1] = bottomRight;
+                    }
 
                         break;
                     case 6:
@@ -269,7 +279,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         {
                             circlesUp++;
                             bottomLeft.Visibility = System.Windows.Visibility.Visible;
-                        }
+                            VisibleBubbles[circlesUp -1] = bottomLeft;
+                    }
 
                         break;
                 }
@@ -279,7 +290,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
         private void CheckBubbleCollision(Joint rightHand, Joint leftHand, Joint rightFoot, Joint leftFoot, Joint head)
         {
-
+            BubbleShaper(VisibleBubbles);
             // array of Camera space posistions
             positionArray = new CameraSpacePoint[] {rightHand.Position, leftHand.Position, rightFoot.Position, leftFoot.Position, head.Position};
             //, rightFoot.Position, leftFoot.Position, head.Position
@@ -293,6 +304,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         top.Visibility = System.Windows.Visibility.Collapsed;
                         circlesUp--;
                         numberOfHitsCount++;
+                        bubbleHit(top);
                     }
                     if (x >= 1200 && x <= 1600 && y >= 310 && y <= 430 && topRight.Visibility == System.Windows.Visibility.Visible)
                     {
@@ -484,10 +496,67 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
         private void PlaySound(MediaPlayer player)
         {
-            var uri = new Uri("C:\\Users\\LabLaptop\\Documents\\HackathonProject\\YorkhillChildrensHospitalKinect\\Audio files\\burst a beat theme.mp3");
+            var uri = new Uri("C:\\Users\\Jack\\Documents\\Uni\\Year 3\\October Hackathon\\YorkhillChildrensHospitalKinect\\Audio files\\burst a beat theme.mp3");
             player.Open(uri);
             player.Play();
             //testBubble.Play();
+        }
+        
+        private void bubbleHit(System.Windows.Shapes.Ellipse b)
+        {
+            int i = 0;
+            while ( VisibleBubbles[i] != b) {
+                i++;
+            }
+            while (VisibleBubbles[i]!= null)
+            {
+                VisibleBubbles[i] = VisibleBubbles[i + 1];
+                i++;
+            }
+            b.Height = 2;
+            b.Width = 2;
+            b.Opacity = 1.0;
+        }
+
+        private void BubbleShaper(System.Windows.Shapes.Ellipse[] visible)
+        {
+            Boolean reshuffle = false;
+            if (visible[0] != null)
+            {
+                for (int i = 0;  i < circlesUp; i ++)
+                {
+                    System.Windows.Shapes.Ellipse b = visible[i];
+                    if (b.Height < 55)
+                    {
+                        b.Height = b.Height + 1;
+                        b.Width = b.Width + 1;
+                    }
+                   else if (b.Opacity > 0)
+                    {
+                        b.Opacity = b.Opacity - 0.005;
+                    }
+                    else 
+                    {
+                        b.Visibility = System.Windows.Visibility.Collapsed;
+                        b.Height = 2;
+                        b.Width = 2;
+                        b.Opacity = 1.0;
+                        reshuffle = true;
+                        circlesUp--;
+                    }
+                }
+                if (reshuffle == true)
+                {
+                    int i = 0;
+                    while (visible[i] != null && i!=7)
+                    {
+                        
+                        visible[i] = visible[i + 1];
+                        i++;
+                    }
+                    //visible[i] = null;
+                }
+            }
         }
 
         /// <summary>

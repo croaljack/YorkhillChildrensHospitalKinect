@@ -28,13 +28,13 @@
         <StatusBar Grid.Row="3" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource MediumGreyBrush}">
             <StatusBarItem Content="{Binding StatusText}" />
         </StatusBar>
-        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="55" Margin="145,386,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="55" Name="bottomLeft"/>
-        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="55" Margin="179,144,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="55" Name="topLeft"/>
-        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="55" Margin="303,78,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="55" Name="top"/>
-        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="55" Margin="424,0,0,302" Grid.Row="1" Stroke="Black" VerticalAlignment="Bottom" Width="55" Name="topRight"/>
-        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Right" Height="55" Margin="0,386,163,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="55" Name="bottomRight"/>
-        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="55" Margin="145,252,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="55" Name="left"/>
-        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="55" Margin="454,252,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="55" Name="right"/>
+        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="2" Margin="145,386,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="2" Name="bottomLeft"/>
+        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="2" Margin="179,144,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="2" Name="topLeft"/>
+        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="2" Margin="303,78,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="2" Name="top"/>
+        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="2" Margin="424,0,0,302" Grid.Row="1" Stroke="Black" VerticalAlignment="Bottom" Width="2" Name="topRight"/>
+        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Right" Height="2" Margin="0,386,163,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="2" Name="bottomRight"/>
+        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="2" Margin="145,252,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="2" Name="left"/>
+        <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="2" Margin="454,252,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="2" Name="right"/>
         <Label x:Name="gameOver" Content="GAME OVER" FontSize ="90" HorizontalAlignment="Left" Height="192" Margin="85,144,0,0" Grid.Row="1" VerticalAlignment="Top" Width="497" Visibility="Hidden"/>
     </Grid>
 </Window>

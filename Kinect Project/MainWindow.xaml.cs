@@ -88,6 +88,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
         private int circlesUp = 0;
 
+        private int start = 0;
+
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
         /// </summary>
@@ -113,6 +115,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
             // wire handler for frame arrival
             this.bodyIndexFrameReader.FrameArrived += this.Reader_FrameArrived;
+
+            // play music
+            PlaySound(player);
 
             this.bodyIndexFrameDescription = this.kinectSensor.BodyIndexFrameSource.FrameDescription;
 
@@ -150,7 +155,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
         }
 
-        private void Reader_BodyFrameArrived(object sender, BodyFrameArrivedEventArgs e) {
+        private void Reader_BodyFrameArrived(object sender, BodyFrameArrivedEventArgs e)
+        {
 
             if (circlesUp > 3)
             {
@@ -163,7 +169,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 if (bodyFrame != null)
                 {
                     bodyFrame.GetAndRefreshBodyData(this.bodies);
-                    
+
 
                     for (int i = 0; i < this.bodycount; i++)
                     {
@@ -173,46 +179,104 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         Joint leftFoot = bodies[i].Joints[JointType.FootLeft];
                         Joint head = bodies[i].Joints[JointType.Head];
 
-                        CheckBubbleCollision(rightHand, leftHand, rightFoot, leftFoot, head);
+                        double rightX = this.coordinateMapper.MapCameraPointToColorSpace(rightHand.Position).X;
+                        double rightY = this.coordinateMapper.MapCameraPointToColorSpace(rightHand.Position).Y;
+                        double leftX = this.coordinateMapper.MapCameraPointToColorSpace(leftHand.Position).X;
+                        double leftY = this.coordinateMapper.MapCameraPointToColorSpace(leftHand.Position).Y;
+
+                        if (start == 0)
+                        {
+                            //&& rightX >= 1200 && rightX <= 1600 && rightY >= 310 && rightY <= 430)
+                            {
+                                // && leftX >= 1200 && leftX <= 1600 && leftY >= 310 && leftY <= 430
+                                start = 1;
+                            }
+
+                            if (circlesUp < 3 && start == 1)
+                            {
+                                CheckBubbleCollision(rightHand, leftHand, rightFoot, leftFoot, head);
+
+                            }
+
+                        }
                     }
                 }
-            }
 
-            if (frameCount == 45)
-            {
-                Random random = new Random();
-                int randomNumber = random.Next(0, 7);
-                switch (randomNumber)
+                if (frameCount == 20 && start == 1)
                 {
-                    case 0:
-                        top.Visibility = System.Windows.Visibility.Visible;
-                        break;
-                    case 1:
-                        topRight.Visibility = System.Windows.Visibility.Visible;
-                        break;
-                    case 2:
-                        topLeft.Visibility = System.Windows.Visibility.Visible;
-                        break;
-                    case 3:
-                        left.Visibility = System.Windows.Visibility.Visible;
-                        break;
-                    case 4:
-                        right.Visibility = System.Windows.Visibility.Visible;
-                        break;
-                    case 5:
-                        bottomRight.Visibility = System.Windows.Visibility.Visible;
-                        break;
-                    case 6:
-                        bottomLeft.Visibility = System.Windows.Visibility.Visible;
-                        break;
+                    Random random = new Random();
+                    int randomNumber = random.Next(0, 7);
+                    switch (randomNumber)
+                    {
+                        case 0:
+                            if (top.Visibility != System.Windows.Visibility.Visible)
+                            {
+                                circlesUp++;
+                                top.Visibility = System.Windows.Visibility.Visible;
+                            }
+
+                            break;
+                        case 1:
+                            if (topRight.Visibility != System.Windows.Visibility.Visible)
+                            {
+                                circlesUp++;
+                                topRight.Visibility = System.Windows.Visibility.Visible;
+                            }
+
+                            break;
+                        case 2:
+                            if (topLeft.Visibility != System.Windows.Visibility.Visible)
+                            {
+                                circlesUp++;
+                                topLeft.Visibility = System.Windows.Visibility.Visible;
+                            }
+
+                            break;
+                        case 3:
+                            if (left.Visibility != System.Windows.Visibility.Visible)
+                            {
+                                circlesUp++;
+                                left.Visibility = System.Windows.Visibility.Visible;
+                            }
+
+                            break;
+                        case 4:
+                            if (right.Visibility != System.Windows.Visibility.Visible)
+                            {
+                                circlesUp++;
+                                right.Visibility = System.Windows.Visibility.Visible;
+                            }
+
+                            break;
+                        case 5:
+                            if (bottomRight.Visibility != System.Windows.Visibility.Visible)
+                            {
+                                circlesUp++;
+                                bottomRight.Visibility = System.Windows.Visibility.Visible;
+                            }
+
+                            break;
+                        case 6:
+                            if (bottomLeft.Visibility != System.Windows.Visibility.Visible)
+                            {
+                                circlesUp++;
+                                bottomLeft.Visibility = System.Windows.Visibility.Visible;
+                            }
+
+                            break;
+                    }
+                    frameCount = 0;
                 }
-                circlesUp++;
-                frameCount = 0;
-            }
-            frameCount++;
+                frameCount++;
 
 
             }
+        }
+
+        private void CreateBubble()
+        {
+
+        }
 
         private void CheckBubbleCollision(Joint rightHand, Joint leftHand, Joint rightFoot, Joint leftFoot, Joint head)
         {
@@ -220,55 +284,55 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             // array of Camera space posistions
             positionArray = new CameraSpacePoint[] {rightHand.Position, leftHand.Position, rightFoot.Position, leftFoot.Position, head.Position};
             //, rightFoot.Position, leftFoot.Position, head.Position
+                foreach (CameraSpacePoint j in positionArray)
+                {
+                    double x = this.coordinateMapper.MapCameraPointToColorSpace(j).X;
+                    double y = this.coordinateMapper.MapCameraPointToColorSpace(j).Y;
 
-            foreach (CameraSpacePoint j in positionArray)
-            {
-                double x = this.coordinateMapper.MapCameraPointToColorSpace(j).X;
-                double y = this.coordinateMapper.MapCameraPointToColorSpace(j).Y;
-                
-                if (x >= 940 && x <= 1045 && y >= 0 && y <= 310 && top.Visibility == System.Windows.Visibility.Visible)
-                {
-                    top.Visibility = System.Windows.Visibility.Collapsed;
-                    circlesUp--;
-                    numberOfHitsCount++;
+                    if (x >= 940 && x <= 1045 && y >= 0 && y <= 310 && top.Visibility == System.Windows.Visibility.Visible)
+                    {
+                        top.Visibility = System.Windows.Visibility.Collapsed;
+                        circlesUp--;
+                        numberOfHitsCount++;
+                    }
+                    if (x >= 1200 && x <= 1600 && y >= 310 && y <= 430 && topRight.Visibility == System.Windows.Visibility.Visible)
+                    {
+                        topRight.Visibility = System.Windows.Visibility.Collapsed;
+                        circlesUp--;
+                        numberOfHitsCount++;
+                    }
+                    if (x >= 0 && x <= 750 && y >= 310 && y <= 430 && topLeft.Visibility == System.Windows.Visibility.Visible)
+                    {
+                        topLeft.Visibility = System.Windows.Visibility.Collapsed;
+                        circlesUp--;
+                        numberOfHitsCount++;
+                    }
+                    if (x >= 1200 && x <= 1600 && y >= 460 && y <= 735 && right.Visibility == System.Windows.Visibility.Visible)
+                    {
+                        right.Visibility = System.Windows.Visibility.Collapsed;
+                        circlesUp--;
+                        numberOfHitsCount++;
+                    }
+                    if (x >= 0 && x <= 750 && y >= 460 && y <= 735 && left.Visibility == System.Windows.Visibility.Visible)
+                    {
+                        left.Visibility = System.Windows.Visibility.Collapsed;
+                        circlesUp--;
+                        numberOfHitsCount++;
+                    }
+                    if (x >= 1200 && x <= 1600 && y >= 765 && y <= 1050 && bottomRight.Visibility == System.Windows.Visibility.Visible)
+                    {
+                        bottomRight.Visibility = System.Windows.Visibility.Collapsed;
+                        circlesUp--;
+                        numberOfHitsCount++;
+                    }
+                    if (x >= 0 && x <= 750 && y >= 765 && y <= 1050 && bottomLeft.Visibility == System.Windows.Visibility.Visible)
+                    {
+                        bottomLeft.Visibility = System.Windows.Visibility.Collapsed;
+                        circlesUp--;
+                        numberOfHitsCount++;
+                    }
                 }
-                if (x >= 1200 && x <= 1600 && y >= 310 && y <= 430 && topRight.Visibility == System.Windows.Visibility.Visible)
-                {
-                    topRight.Visibility = System.Windows.Visibility.Collapsed;
-                    circlesUp--;
-                    numberOfHitsCount++;
-                }
-                if (x >= 0 && x <= 750 && y >= 310 && y <= 430 && topLeft.Visibility == System.Windows.Visibility.Visible)
-                {
-                    topLeft.Visibility = System.Windows.Visibility.Collapsed;
-                    circlesUp--;
-                    numberOfHitsCount++;
-                }
-                if (x >= 1200 && x <= 1600 && y >= 460 && y <= 735 && right.Visibility == System.Windows.Visibility.Visible)
-                {
-                    right.Visibility = System.Windows.Visibility.Collapsed;
-                    circlesUp--;
-                    numberOfHitsCount++;
-                }
-                if (x >= 0 && x <= 750 && y >= 460 && y <= 735 && left.Visibility == System.Windows.Visibility.Visible)
-                {
-                    left.Visibility = System.Windows.Visibility.Collapsed;
-                    circlesUp--;
-                    numberOfHitsCount++;
-                }
-                if (x >= 1200 && x <= 1600 && y >= 765 && y <= 1050 && bottomRight.Visibility == System.Windows.Visibility.Visible)
-                {
-                    bottomRight.Visibility = System.Windows.Visibility.Collapsed;
-                    circlesUp--;
-                    numberOfHitsCount++;
-                }
-                if (x >= 0 && x <= 750 && y >= 765 && y <= 1050 && bottomLeft.Visibility == System.Windows.Visibility.Visible)
-                {
-                    bottomLeft.Visibility = System.Windows.Visibility.Collapsed;
-                    circlesUp--;
-                    numberOfHitsCount++;
-                }
-            }
+            
 
         }
 
@@ -419,13 +483,13 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             }
         }
 
-        //private void PlaySound(MediaPlayer player)
-        //{
-        //    var uri = new Uri("C:\\Users\\LabLaptop\\Documents\\HackathonProject\\YorkhillChildrensHospitalKinect\\Audio files\\burst a beat theme.mp3");
-        //    player.Open(uri);
-        //    player.Play();
-        //    testBubble.Play();
-        //}
+        private void PlaySound(MediaPlayer player)
+        {
+            var uri = new Uri("C:\\Users\\LabLaptop\\Documents\\HackathonProject\\YorkhillChildrensHospitalKinect\\Audio files\\burst a beat theme.mp3");
+            player.Open(uri);
+            player.Play();
+            //testBubble.Play();
+        }
 
         /// <summary>
         /// Renders color pixels into the writeableBitmap.

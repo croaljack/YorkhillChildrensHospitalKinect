@@ -35,7 +35,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         MediaPlayer player = new MediaPlayer();
         public System.Windows.Shapes.Ellipse[] VisibleBubbles = new System.Windows.Shapes.Ellipse[6];
 
-        public int[] bubbleSequence = { 39, 127, 216, 325, 402, 435, 482, 569, 742, 785, 829, 872, 917, 961, 982, 1027, 1050, 1104, 1126, 1127, 1181, 1225, 1268, 1312, 1334, 1378, 1399, 1440, 1481, 1519, 1559, 1592, 1660 ,1694
+        public int[] bubbleSequence = { 39, 127, 216, 325, 402, 435, 482, 569, 742, 785, 829, 872, 917, 961, 982, 1027, 1050, 1104, 1126, 1127, 1181, 1225, 1268, 1312, 1334, 1378, 1399, 1440, 1481, 1519, 1559, 1592, 1660 ,1694, 1895, 1955, 2016, 2075, 2104, 2135, 2192, 2249, 2263, 2269, 2276, 2290, 2296, 2303, 2331, 2358, 2385, 2399, 2412, 2440, 2474, 2488, 2494, 2508, 2515, 2521, 2542, 2549, 2562, 2569, 2576, 2617, 2646, 2682, 2713, 2740, 2753, 2759, 2766, 2794, 2813, 2821, 2834, 2862, 2876, 2910, 2930, 2944, 2958, 2985, 2999, 3005, 3012, 3283, 3534, 5163, 5174, 5179, 5184, 5195, 5200, 5205, 5216, 5221, 5226, 5237, 5242, 5247, 5263, 5268
  };
         private int sequence_counter = 0;
 
@@ -546,6 +546,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 {
                     return randomNumber;
                 }
+
                 if (VisibleBubbles[randomNumber].Visibility != System.Windows.Visibility.Visible)
                 {
                     return randomNumber;

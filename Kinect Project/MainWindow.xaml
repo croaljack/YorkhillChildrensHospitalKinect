@@ -36,5 +36,6 @@
         <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="2" Margin="145,252,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="2" Name="left"/>
         <Ellipse Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="2" Margin="454,252,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="2" Name="right"/>
         <Label x:Name="gameOver" Content="GAME OVER" FontSize ="90" HorizontalAlignment="Left" Height="192" Margin="85,144,0,0" Grid.Row="1" VerticalAlignment="Top" Width="497" Visibility="Hidden"/>
+        <Label x:Name="Score" Content="Score" FontSize ="40" FontStyle ="Italic" HorizontalAlignment="Center" Height="75" Margin="59,5,463,0" Grid.Row="1" VerticalAlignment="Top" Width="150" />
     </Grid>
 </Window>

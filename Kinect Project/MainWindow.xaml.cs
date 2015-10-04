@@ -327,6 +327,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         topRight.Visibility = System.Windows.Visibility.Collapsed;
                         circlesUp--;
                         numberOfHitsCount++;
+                        
                     }
                     if (x >= 0 && x <= 750 && y >= 310 && y <= 430 && topLeft.Visibility == System.Windows.Visibility.Visible)
                     {
@@ -358,7 +359,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         circlesUp--;
                         numberOfHitsCount++;
                     }
-                }
+                Score.Content = numberOfHitsCount.ToString();
+            }
             
 
         }
@@ -512,7 +514,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
         private void PlaySound(MediaPlayer player)
         {
-            var uri = new Uri("C:\\Users\\Jack\\Documents\\Uni\\Year 3\\October Hackathon\\YorkhillChildrensHospitalKinect\\Audio files\\burst a beat theme.mp3");
+            var uri = new Uri("C:\\Users\\LabLaptop\\Documents\\HackathonProject\\YorkhillChildrensHospitalKinect\\Kinect Project\\audioFiles\\burst a beat theme.mp3");
             player.Open(uri);
             player.Play();
             //testBubble.Play();

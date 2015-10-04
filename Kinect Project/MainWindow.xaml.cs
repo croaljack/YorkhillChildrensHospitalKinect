@@ -187,88 +187,24 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         if (start == 0)
                         {
                             //&& rightX >= 1200 && rightX <= 1600 && rightY >= 310 && rightY <= 430)
-                            {
+                            
                                 // && leftX >= 1200 && leftX <= 1600 && leftY >= 310 && leftY <= 430
-                                start = 1;
-                            }
-
-                            if (circlesUp < 3 && start == 1)
-                            {
-                                CheckBubbleCollision(rightHand, leftHand, rightFoot, leftFoot, head);
-
-                            }
-
+                            start = 1;
                         }
+
+                        if (circlesUp < 3 && start == 1)
+                        {
+                            CheckBubbleCollision(rightHand, leftHand, rightFoot, leftFoot, head);
+                        }
+
                     }
                 }
-
                 if (frameCount == 20 && start == 1)
                 {
-                    Random random = new Random();
-                    int randomNumber = random.Next(0, 7);
-                    switch (randomNumber)
-                    {
-                        case 0:
-                            if (top.Visibility != System.Windows.Visibility.Visible)
-                            {
-                                circlesUp++;
-                                top.Visibility = System.Windows.Visibility.Visible;
-                            }
-
-                            break;
-                        case 1:
-                            if (topRight.Visibility != System.Windows.Visibility.Visible)
-                            {
-                                circlesUp++;
-                                topRight.Visibility = System.Windows.Visibility.Visible;
-                            }
-
-                            break;
-                        case 2:
-                            if (topLeft.Visibility != System.Windows.Visibility.Visible)
-                            {
-                                circlesUp++;
-                                topLeft.Visibility = System.Windows.Visibility.Visible;
-                            }
-
-                            break;
-                        case 3:
-                            if (left.Visibility != System.Windows.Visibility.Visible)
-                            {
-                                circlesUp++;
-                                left.Visibility = System.Windows.Visibility.Visible;
-                            }
-
-                            break;
-                        case 4:
-                            if (right.Visibility != System.Windows.Visibility.Visible)
-                            {
-                                circlesUp++;
-                                right.Visibility = System.Windows.Visibility.Visible;
-                            }
-
-                            break;
-                        case 5:
-                            if (bottomRight.Visibility != System.Windows.Visibility.Visible)
-                            {
-                                circlesUp++;
-                                bottomRight.Visibility = System.Windows.Visibility.Visible;
-                            }
-
-                            break;
-                        case 6:
-                            if (bottomLeft.Visibility != System.Windows.Visibility.Visible)
-                            {
-                                circlesUp++;
-                                bottomLeft.Visibility = System.Windows.Visibility.Visible;
-                            }
-
-                            break;
-                    }
-                    frameCount = 0;
+                    CreateBubble();
                 }
-                frameCount++;
 
+                frameCount++;
 
             }
         }
@@ -276,7 +212,70 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private void CreateBubble()
         {
 
-        }
+                Random random = new Random();
+                int randomNumber = random.Next(0, 7);
+                switch (randomNumber)
+                {
+                    case 0:
+                        if (top.Visibility != System.Windows.Visibility.Visible)
+                        {
+                            circlesUp++;
+                            top.Visibility = System.Windows.Visibility.Visible;
+                        }
+
+                        break;
+                    case 1:
+                        if (topRight.Visibility != System.Windows.Visibility.Visible)
+                        {
+                            circlesUp++;
+                            topRight.Visibility = System.Windows.Visibility.Visible;
+                        }
+
+                        break;
+                    case 2:
+                        if (topLeft.Visibility != System.Windows.Visibility.Visible)
+                        {
+                            circlesUp++;
+                            topLeft.Visibility = System.Windows.Visibility.Visible;
+                        }
+
+                        break;
+                    case 3:
+                        if (left.Visibility != System.Windows.Visibility.Visible)
+                        {
+                            circlesUp++;
+                            left.Visibility = System.Windows.Visibility.Visible;
+                        }
+
+                        break;
+                    case 4:
+                        if (right.Visibility != System.Windows.Visibility.Visible)
+                        {
+                            circlesUp++;
+                            right.Visibility = System.Windows.Visibility.Visible;
+                        }
+
+                        break;
+                    case 5:
+                        if (bottomRight.Visibility != System.Windows.Visibility.Visible)
+                        {
+                            circlesUp++;
+                            bottomRight.Visibility = System.Windows.Visibility.Visible;
+                        }
+
+                        break;
+                    case 6:
+                        if (bottomLeft.Visibility != System.Windows.Visibility.Visible)
+                        {
+                            circlesUp++;
+                            bottomLeft.Visibility = System.Windows.Visibility.Visible;
+                        }
+
+                        break;
+                }
+                frameCount = 0;
+            }
+        
 
         private void CheckBubbleCollision(Joint rightHand, Joint leftHand, Joint rightFoot, Joint leftFoot, Joint head)
         {

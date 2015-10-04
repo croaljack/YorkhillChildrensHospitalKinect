@@ -25,6 +25,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private Body[] bodies = null;
         private int bodycount;
 
+        private int frameNumber = 0;
 
         private CoordinateMapper coordinateMapper = null;
 
@@ -33,6 +34,11 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         //global soundplayer constructor
         MediaPlayer player = new MediaPlayer();
         public System.Windows.Shapes.Ellipse[] VisibleBubbles = new System.Windows.Shapes.Ellipse[6];
+
+        public int[] bubbleSequence = { 39, 127, 216, 325, 402, 435, 482, 569, 742, 785, 829, 872, 917, 961, 982, 1027, 1050, 1104, 1126, 1127, 1181, 1225, 1268, 1312, 1334, 1378, 1399, 1440, 1481, 1519, 1559, 1592, 1660 ,1694
+ };
+        private int sequence_counter = 0;
+
         /// <summary>
         /// Size of the RGB pixel in the bitmap
         /// </summary>
@@ -70,6 +76,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         /// Bitmap to display
         /// </summary>
         private WriteableBitmap bodyIndexBitmap = null;
+
 
         /// <summary>
         /// Intermediate storage for frame data converted to color
@@ -144,7 +151,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             // initialize the components (controls) of the window
             this.InitializeComponent();
 
-            PlaySound(player);
+            
 
             top.Visibility = System.Windows.Visibility.Collapsed;
             topLeft.Visibility = System.Windows.Visibility.Collapsed;
@@ -155,17 +162,17 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             bottomLeft.Visibility = System.Windows.Visibility.Collapsed;
             gameOver.Visibility = System.Windows.Visibility.Collapsed;
 
-            
+            PlaySound(player);
 
         }
 
         private void Reader_BodyFrameArrived(object sender, BodyFrameArrivedEventArgs e)
         {
-
-            if (circlesUp > 3)
+            frameNumber++;
+            /*if (circlesUp > 3)
             {
                 gameOver.Visibility = System.Windows.Visibility.Visible;
-            }
+            }*/
 
             using (BodyFrame bodyFrame = e.FrameReference.AcquireFrame())
             {
@@ -203,12 +210,21 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
                     }
                 }
-                if (frameCount == 20 && start == 1)
+
+
+                // IF POP OF STACK = FRAME NUMBER
+                if (frameNumber == bubbleSequence[sequence_counter])
                 {
                     CreateBubble();
+                    sequence_counter++;
                 }
 
-                frameCount++;
+                /* if (frameCount == 20 && start == 1)  TEMPORARILY DISABLED!!
+                 {
+                     CreateBubble();
+                 }*/
+
+                //frameCount++;
 
             }
         }

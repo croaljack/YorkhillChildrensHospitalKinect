@@ -86,12 +86,14 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
         private int colorAt = 0;
 
+        private int circlesUp = 0;
+
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
         /// </summary>
         public MainWindow()
         {
-            PlaySound(player);
+            //PlaySound(player);
 
             // get the kinectSensor object
             this.kinectSensor = KinectSensor.GetDefault();
@@ -137,21 +139,27 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             this.InitializeComponent();
 
             top.Visibility = System.Windows.Visibility.Collapsed;
-            topRight.Visibility = System.Windows.Visibility.Collapsed;
             topLeft.Visibility = System.Windows.Visibility.Collapsed;
+            topRight.Visibility = System.Windows.Visibility.Collapsed;
             right.Visibility = System.Windows.Visibility.Collapsed;
             left.Visibility = System.Windows.Visibility.Collapsed;
             bottomRight.Visibility = System.Windows.Visibility.Collapsed;
             bottomLeft.Visibility = System.Windows.Visibility.Collapsed;
+            gameOver.Visibility = System.Windows.Visibility.Collapsed;
 
 
         }
 
         private void Reader_BodyFrameArrived(object sender, BodyFrameArrivedEventArgs e) {
 
+            if (circlesUp > 3)
+            {
+                gameOver.Visibility = System.Windows.Visibility.Visible;
+            }
 
             using (BodyFrame bodyFrame = e.FrameReference.AcquireFrame())
             {
+
                 if (bodyFrame != null)
                 {
                     bodyFrame.GetAndRefreshBodyData(this.bodies);
@@ -170,7 +178,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 }
             }
 
-            if (frameCount%45 == 0)
+            if (frameCount == 45)
             {
                 Random random = new Random();
                 int randomNumber = random.Next(0, 7);
@@ -198,6 +206,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         bottomLeft.Visibility = System.Windows.Visibility.Visible;
                         break;
                 }
+                circlesUp++;
                 frameCount = 0;
             }
             frameCount++;
@@ -220,36 +229,43 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 if (x >= 940 && x <= 1045 && y >= 0 && y <= 310 && top.Visibility == System.Windows.Visibility.Visible)
                 {
                     top.Visibility = System.Windows.Visibility.Collapsed;
+                    circlesUp--;
                     numberOfHitsCount++;
                 }
                 if (x >= 1200 && x <= 1600 && y >= 310 && y <= 430 && topRight.Visibility == System.Windows.Visibility.Visible)
                 {
                     topRight.Visibility = System.Windows.Visibility.Collapsed;
+                    circlesUp--;
                     numberOfHitsCount++;
                 }
                 if (x >= 0 && x <= 750 && y >= 310 && y <= 430 && topLeft.Visibility == System.Windows.Visibility.Visible)
                 {
                     topLeft.Visibility = System.Windows.Visibility.Collapsed;
+                    circlesUp--;
                     numberOfHitsCount++;
                 }
                 if (x >= 1200 && x <= 1600 && y >= 460 && y <= 735 && right.Visibility == System.Windows.Visibility.Visible)
                 {
                     right.Visibility = System.Windows.Visibility.Collapsed;
+                    circlesUp--;
                     numberOfHitsCount++;
                 }
                 if (x >= 0 && x <= 750 && y >= 460 && y <= 735 && left.Visibility == System.Windows.Visibility.Visible)
                 {
                     left.Visibility = System.Windows.Visibility.Collapsed;
+                    circlesUp--;
                     numberOfHitsCount++;
                 }
                 if (x >= 1200 && x <= 1600 && y >= 765 && y <= 1050 && bottomRight.Visibility == System.Windows.Visibility.Visible)
                 {
                     bottomRight.Visibility = System.Windows.Visibility.Collapsed;
+                    circlesUp--;
                     numberOfHitsCount++;
                 }
                 if (x >= 0 && x <= 750 && y >= 765 && y <= 1050 && bottomLeft.Visibility == System.Windows.Visibility.Visible)
                 {
                     bottomLeft.Visibility = System.Windows.Visibility.Collapsed;
+                    circlesUp--;
                     numberOfHitsCount++;
                 }
             }
@@ -403,13 +419,13 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             }
         }
 
-        private void PlaySound(MediaPlayer player)
-        {
-            var uri = new Uri("C:\\Users\\LabLaptop\\Documents\\HackathonProject\\YorkhillChildrensHospitalKinect\\Audio files\\burst a beat theme.mp3");
-            player.Open(uri);
-            player.Play();
-            testBubble.Play();
-        }
+        //private void PlaySound(MediaPlayer player)
+        //{
+        //    var uri = new Uri("C:\\Users\\LabLaptop\\Documents\\HackathonProject\\YorkhillChildrensHospitalKinect\\Audio files\\burst a beat theme.mp3");
+        //    player.Open(uri);
+        //    player.Play();
+        //    testBubble.Play();
+        //}
 
         /// <summary>
         /// Renders color pixels into the writeableBitmap.

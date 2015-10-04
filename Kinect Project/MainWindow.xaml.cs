@@ -33,11 +33,13 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
         //global soundplayer constructor
         MediaPlayer player = new MediaPlayer();
-        public System.Windows.Shapes.Ellipse[] VisibleBubbles = new System.Windows.Shapes.Ellipse[6];
+        public System.Windows.Shapes.Ellipse[] VisibleBubbles = new System.Windows.Shapes.Ellipse[7];
 
-        public int[] bubbleSequence = { 39, 127, 216, 325, 402, 435, 482, 569, 742, 785, 829, 872, 917, 961, 982, 1027, 1050, 1104, 1126, 1127, 1181, 1225, 1268, 1312, 1334, 1378, 1399, 1440, 1481, 1519, 1559, 1592, 1660 ,1694, 1895, 1955, 2016, 2075, 2104, 2135, 2192, 2249, 2263, 2269, 2276, 2290, 2296, 2303, 2331, 2358, 2385, 2399, 2412, 2440, 2474, 2488, 2494, 2508, 2515, 2521, 2542, 2549, 2562, 2569, 2576, 2617, 2646, 2682, 2713, 2740, 2753, 2759, 2766, 2794, 2813, 2821, 2834, 2862, 2876, 2910, 2930, 2944, 2958, 2985, 2999, 3005, 3012, 3283, 3534, 5163, 5174, 5179, 5184, 5195, 5200, 5205, 5216, 5221, 5226, 5237, 5242, 5247, 5263, 5268
- };
+        public int[] bubbleSequence = { 39, 127, 216, 325, 402, 435, 482, 569, 742, 785, 829, 872, 917, 961, 982, 1027, 1050, 1104, 1126, 1127, 1181, 1225, 1268, 1312, 1334, 1378, 1399, 1440, 1481, 1519, 1559, 1592, 1660 ,1694, 1895, 1955, 2016, 2075, 2104, 2135, 2192, 2249, 2263, 2269, 2276, 2290, 2296, 2303, 2331, 2358, 2385, 2399, 2412, 2440, 2474, 2488, 2494, 2508, 2515, 2521, 2542, 2549, 2562, 2569, 2576, 2617, 2646, 2682, 2713, 2740, 2753, 2759, 2766, 2794, 2813, 2821, 2834, 2862, 2876, 2910, 2930, 2944, 2958, 2985, 2999, 3005, 3012, 3283, 3534, 5163, 5174, 5179, 5184, 5195, 5200, 5205, 5216, 5221, 5226, 5237, 5242, 5247, 5263, 5268 };
         private int sequence_counter = 0;
+
+        Random random;
+        int randomNumber;
 
         /// <summary>
         /// Size of the RGB pixel in the bitmap
@@ -170,6 +172,12 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private void Reader_BodyFrameArrived(object sender, BodyFrameArrivedEventArgs e)
         {
             frameNumber++;
+            // end game at somepoint
+            if (frameNumber > 3500)
+            {
+                gameOver.Visibility = System.Windows.Visibility.Visible;
+                start = -1;
+            }
             /*if (circlesUp > 3)
             {
                 gameOver.Visibility = System.Windows.Visibility.Visible;
@@ -190,11 +198,12 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         Joint rightFoot = bodies[i].Joints[JointType.FootRight];
                         Joint leftFoot = bodies[i].Joints[JointType.FootLeft];
                         Joint head = bodies[i].Joints[JointType.Head];
+                        Joint bum = bodies[i].Joints[JointType.SpineBase];
 
-                        double rightX = this.coordinateMapper.MapCameraPointToColorSpace(rightHand.Position).X;
-                        double rightY = this.coordinateMapper.MapCameraPointToColorSpace(rightHand.Position).Y;
-                        double leftX = this.coordinateMapper.MapCameraPointToColorSpace(leftHand.Position).X;
-                        double leftY = this.coordinateMapper.MapCameraPointToColorSpace(leftHand.Position).Y;
+                        //double rightX = this.coordinateMapper.MapCameraPointToColorSpace(rightHand.Position).X;
+                        //double rightY = this.coordinateMapper.MapCameraPointToColorSpace(rightHand.Position).Y;
+                        //double leftX = this.coordinateMapper.MapCameraPointToColorSpace(leftHand.Position).X;
+                        //double leftY = this.coordinateMapper.MapCameraPointToColorSpace(leftHand.Position).Y;
 
                         if (start == 0)
                         {
@@ -206,7 +215,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
                         if (circlesUp < 6 && start == 1)
                         {
-                            CheckBubbleCollision(rightHand, leftHand, rightFoot, leftFoot, head);
+                            CheckBubbleCollision(rightHand, leftHand, rightFoot, leftFoot, head, bum);
                         }
 
                     }
@@ -234,7 +243,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         {
             //Random random = new Random();
             //int randomNumber = random.Next(0, 7);
-            int randomNumber = randomNumberChooser();
+            randomNumber = randomNumberChooser();
                 switch (randomNumber)
                 {
                     case 0:
@@ -316,15 +325,15 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
                         break;
                 }
-                frameCount = 0;
+                //frameCount = 0;
             }
         
 
-        private void CheckBubbleCollision(Joint rightHand, Joint leftHand, Joint rightFoot, Joint leftFoot, Joint head)
+        private void CheckBubbleCollision(Joint rightHand, Joint leftHand, Joint rightFoot, Joint leftFoot, Joint head, Joint bum)
         {
             BubbleShaper(VisibleBubbles);
             // array of Camera space posistions
-            positionArray = new CameraSpacePoint[] {rightHand.Position, leftHand.Position, rightFoot.Position, leftFoot.Position, head.Position};
+            positionArray = new CameraSpacePoint[] {rightHand.Position, leftHand.Position, rightFoot.Position, leftFoot.Position, head.Position, bum.Position};
             //, rightFoot.Position, leftFoot.Position, head.Position
                 foreach (CameraSpacePoint j in positionArray)
                 {
@@ -564,8 +573,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
         int randomNumberChooser()
         {
-            Random random = new Random();
-            int randomNumber = random.Next(0, 7);
+            random = new Random();
+            randomNumber = random.Next(0, 7);
             try
             {
                 if (VisibleBubbles[randomNumber] == null)

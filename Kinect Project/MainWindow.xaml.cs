@@ -19,7 +19,6 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-
         // body reader and list of bodies
         private BodyFrameReader bodyFrameReader = null;
         private Body[] bodies = null;
@@ -37,9 +36,6 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
         public int[] bubbleSequence = { 39, 127, 216, 325, 402, 435, 482, 569, 742, 785, 829, 872, 917, 961, 982, 1027, 1050, 1104, 1126, 1127, 1181, 1225, 1268, 1312, 1334, 1378, 1399, 1440, 1481, 1519, 1559, 1592, 1660 ,1694, 1895, 1955, 2016, 2075, 2104, 2135, 2192, 2249, 2263, 2269, 2276, 2290, 2296, 2303, 2331, 2358, 2385, 2399, 2412, 2440, 2474, 2488, 2494, 2508, 2515, 2521, 2542, 2549, 2562, 2569, 2576, 2617, 2646, 2682, 2713, 2740, 2753, 2759, 2766, 2794, 2813, 2821, 2834, 2862, 2876, 2910, 2930, 2944, 2958, 2985, 2999, 3005, 3012, 3283, 3534, 5163, 5174, 5179, 5184, 5195, 5200, 5205, 5216, 5221, 5226, 5237, 5242, 5247, 5263, 5268 };
         private int sequence_counter = 0;
-
-        Random random;
-        int randomNumber;
 
         /// <summary>
         /// Size of the RGB pixel in the bitmap
@@ -90,16 +86,15 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         /// </summary>
         private string statusText = null;
 
-        private int frameCount = 0;
-
         private int numberOfHitsCount = 0;
-        private int displayCount = 0;
 
         private int colorAt = 0;
 
+        private int colorCount = 0;
+
         private int circlesUp = 0;
 
-        private int start = 0;
+        private int start = 1;
 
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
@@ -154,16 +149,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             // initialize the components (controls) of the window
             this.InitializeComponent();
 
-            
-
-            top.Visibility = System.Windows.Visibility.Collapsed;
-            topLeft.Visibility = System.Windows.Visibility.Collapsed;
-            topRight.Visibility = System.Windows.Visibility.Collapsed;
-            right.Visibility = System.Windows.Visibility.Collapsed;
-            left.Visibility = System.Windows.Visibility.Collapsed;
-            bottomRight.Visibility = System.Windows.Visibility.Collapsed;
-            bottomLeft.Visibility = System.Windows.Visibility.Collapsed;
-            gameOver.Visibility = System.Windows.Visibility.Collapsed;
+            restart();
 
             PlaySound(player);
 
@@ -173,15 +159,19 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         {
             frameNumber++;
             // end game at somepoint
-            if (frameNumber > 3500)
+            if (frameNumber > 2000)
             {
                 gameOver.Visibility = System.Windows.Visibility.Visible;
+                Score.Visibility = System.Windows.Visibility.Hidden;
+                finalScore.Visibility = System.Windows.Visibility.Visible;
+                finalScore.Content = " Your Score is:  " + numberOfHitsCount;
                 start = -1;
             }
-            /*if (circlesUp > 3)
+
+            if (frameNumber == 2300)
             {
-                gameOver.Visibility = System.Windows.Visibility.Visible;
-            }*/
+                restart();
+            }
 
             using (BodyFrame bodyFrame = e.FrameReference.AcquireFrame())
             {
@@ -189,8 +179,6 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 if (bodyFrame != null)
                 {
                     bodyFrame.GetAndRefreshBodyData(this.bodies);
-
-
                     for (int i = 0; i < this.bodycount; i++)
                     {
                         Joint rightHand = bodies[i].Joints[JointType.HandRight];
@@ -200,132 +188,135 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         Joint head = bodies[i].Joints[JointType.Head];
                         Joint bum = bodies[i].Joints[JointType.SpineBase];
 
-                        //double rightX = this.coordinateMapper.MapCameraPointToColorSpace(rightHand.Position).X;
-                        //double rightY = this.coordinateMapper.MapCameraPointToColorSpace(rightHand.Position).Y;
-                        //double leftX = this.coordinateMapper.MapCameraPointToColorSpace(leftHand.Position).X;
-                        //double leftY = this.coordinateMapper.MapCameraPointToColorSpace(leftHand.Position).Y;
-
-                        if (start == 0)
-                        {
-                            //&& rightX >= 1200 && rightX <= 1600 && rightY >= 310 && rightY <= 430)
-                            
-                                // && leftX >= 1200 && leftX <= 1600 && leftY >= 310 && leftY <= 430
-                            start = 1;
-                        }
-
                         if (circlesUp < 6 && start == 1)
                         {
                             CheckBubbleCollision(rightHand, leftHand, rightFoot, leftFoot, head, bum);
                         }
-
                     }
                 }
 
 
-                // IF POP OF STACK = FRAME NUMBER
-                if (frameNumber == bubbleSequence[sequence_counter])
+                //if (frameNumber == bubbleSequence[sequence_counter])
+                if (frameNumber % 50 == 0)
                 {
                     CreateBubble();
-                    sequence_counter++;
                 }
-
-                /* if (frameCount == 20 && start == 1)  TEMPORARILY DISABLED!!
-                 {
-                     CreateBubble();
-                 }*/
-
-                //frameCount++;
-
             }
+        }
+
+        private void restart()
+        {
+            player.Stop();
+            player.Play();
+
+            start = 1;
+            frameNumber = 0;
+            numberOfHitsCount = 0;
+            VisibleBubbles = new System.Windows.Shapes.Ellipse[7];
+            circlesUp = 0;
+            colorCount = 0;
+
+            Score.Visibility = System.Windows.Visibility.Visible;
+            finalScore.Visibility = System.Windows.Visibility.Collapsed;
+            top.Visibility = System.Windows.Visibility.Collapsed;
+            topLeft.Visibility = System.Windows.Visibility.Collapsed;
+            topRight.Visibility = System.Windows.Visibility.Collapsed;
+            right.Visibility = System.Windows.Visibility.Collapsed;
+            left.Visibility = System.Windows.Visibility.Collapsed;
+            bottomRight.Visibility = System.Windows.Visibility.Collapsed;
+            bottomLeft.Visibility = System.Windows.Visibility.Collapsed;
+            gameOver.Visibility = System.Windows.Visibility.Collapsed;
         }
 
         private void CreateBubble()
         {
-            //Random random = new Random();
-            //int randomNumber = random.Next(0, 7);
-            randomNumber = randomNumberChooser();
+            Random random = new Random();
+            int randomNumber = random.Next(0, 7);
+            //randomNumber = randomNumberChooser();
                 switch (randomNumber)
                 {
                     case 0:
                         if (top.Visibility != System.Windows.Visibility.Visible)
                         {
-                            circlesUp++;
                             top.Visibility = System.Windows.Visibility.Visible;
-                        try {
-                            VisibleBubbles[circlesUp - 1] = top;
-                        } catch { IndexOutOfRangeException e0; }
+                            try {
+                                VisibleBubbles[circlesUp] = top;
+                                circlesUp++;
+                            }
+                            catch { IndexOutOfRangeException e0; }
                         }
 
                         break;
                     case 1:
                         if (topRight.Visibility != System.Windows.Visibility.Visible)
                         {
-                            circlesUp++;
                             topRight.Visibility = System.Windows.Visibility.Visible;
-                        try {
-                            VisibleBubbles[circlesUp - 1] = topRight;
-                        } catch { IndexOutOfRangeException e1; }
-                    }
+                            try {
+                                VisibleBubbles[circlesUp] = topRight;
+                                circlesUp++;
+                            }
+                            catch { IndexOutOfRangeException e1; }
+                        }
 
                         break;
                     case 2:
                         if (topLeft.Visibility != System.Windows.Visibility.Visible)
                         {
-                            circlesUp++;
                             topLeft.Visibility = System.Windows.Visibility.Visible;
-                        try {
-                            VisibleBubbles[circlesUp - 1] = topLeft;
-                        } catch { IndexOutOfRangeException e2; }
-                    }
-
+                            try {
+                                VisibleBubbles[circlesUp] = topLeft;
+                                circlesUp++;
+                            }
+                            catch { IndexOutOfRangeException e2; }
+                        }
                         break;
                     case 3:
                         if (left.Visibility != System.Windows.Visibility.Visible)
                         {
-                            circlesUp++;
                             left.Visibility = System.Windows.Visibility.Visible;
-                        try {
-                            VisibleBubbles[circlesUp-1] = left;
-                        } catch { IndexOutOfRangeException e3; }
-                    }
-
+                            try {
+                                VisibleBubbles[circlesUp] = left;
+                                circlesUp++;
+                            }
+                            catch { IndexOutOfRangeException e3; }
+                        }
                         break;
                     case 4:
                         if (right.Visibility != System.Windows.Visibility.Visible)
                         {
-                            circlesUp++;
-                        right.Visibility = System.Windows.Visibility.Visible;
-                         try {
-                            VisibleBubbles[circlesUp-1] = right;
-                        } catch { IndexOutOfRangeException e4;}
-                    }
-
+                            right.Visibility = System.Windows.Visibility.Visible;
+                            try {
+                                VisibleBubbles[circlesUp] = right;
+                                circlesUp++;
+                            }
+                            catch { IndexOutOfRangeException e4;}
+                        }
                         break;
                     case 5:
                         if (bottomRight.Visibility != System.Windows.Visibility.Visible)
                         {
-                            circlesUp++;
                             bottomRight.Visibility = System.Windows.Visibility.Visible;
-                        try
-                        {
-                            VisibleBubbles[circlesUp-1] = bottomRight;
-                        } catch { IndexOutOfRangeException e5; }
-                    }
+                            try
+                            {
+                                VisibleBubbles[circlesUp] = bottomRight;
+                                circlesUp++;
+                            }
+                            catch { IndexOutOfRangeException e5; }
+                        }
 
                         break;
                     case 6:
                         if (bottomLeft.Visibility != System.Windows.Visibility.Visible)
                         {
-                            circlesUp++;
                             bottomLeft.Visibility = System.Windows.Visibility.Visible;
                         try {
-                            VisibleBubbles[circlesUp-1] = bottomLeft;
-                        } catch { IndexOutOfRangeException e6; }
+                            VisibleBubbles[circlesUp] = bottomLeft;
+                            circlesUp++;
+                        }
+                        catch { IndexOutOfRangeException e6; }
                     }
-
                         break;
                 }
-                //frameCount = 0;
             }
         
 
@@ -345,7 +336,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         top.Visibility = System.Windows.Visibility.Collapsed;
                         circlesUp--;
                         numberOfHitsCount++;
-                        displayCount++;
+                        colorCount++;
                         bubbleHit(top);
                     }
                     if (x >= 1200 && x <= 1600 && y >= 310 && y <= 430 && topRight.Visibility == System.Windows.Visibility.Visible)
@@ -353,45 +344,50 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         topRight.Visibility = System.Windows.Visibility.Collapsed;
                         circlesUp--;
                         numberOfHitsCount++;
-                        displayCount++;
-
+                        colorCount++;
+                        bubbleHit(topRight);
                 }
                     if (x >= 0 && x <= 750 && y >= 310 && y <= 430 && topLeft.Visibility == System.Windows.Visibility.Visible)
                     {
                         topLeft.Visibility = System.Windows.Visibility.Collapsed;
                         circlesUp--;
                         numberOfHitsCount++;
-                        displayCount++;
+                        colorCount++;
+                        bubbleHit(topLeft);
                 }
                     if (x >= 1200 && x <= 1600 && y >= 460 && y <= 735 && right.Visibility == System.Windows.Visibility.Visible)
                     {
                         right.Visibility = System.Windows.Visibility.Collapsed;
                         circlesUp--;
                         numberOfHitsCount++;
-                        displayCount++;
+                        colorCount++;
+                        bubbleHit(right);
                 }
                     if (x >= 0 && x <= 750 && y >= 460 && y <= 735 && left.Visibility == System.Windows.Visibility.Visible)
                     {
                         left.Visibility = System.Windows.Visibility.Collapsed;
                         circlesUp--;
                         numberOfHitsCount++;
-                        displayCount++;
+                        colorCount++;
+                        bubbleHit(left);
                 }
                     if (x >= 1200 && x <= 1600 && y >= 765 && y <= 1050 && bottomRight.Visibility == System.Windows.Visibility.Visible)
                     {
                         bottomRight.Visibility = System.Windows.Visibility.Collapsed;
                         circlesUp--;
                         numberOfHitsCount++;
-                        displayCount++;
+                        colorCount++;
+                        bubbleHit(bottomRight);
                 }
                     if (x >= 0 && x <= 750 && y >= 765 && y <= 1050 && bottomLeft.Visibility == System.Windows.Visibility.Visible)
                     {
                         bottomLeft.Visibility = System.Windows.Visibility.Collapsed;
                         circlesUp--;
                         numberOfHitsCount++;
-                        displayCount++;
+                        colorCount++;
+                        bubbleHit(bottomLeft);
                 }
-                Score.Content = displayCount.ToString();
+                Score.Content = numberOfHitsCount.ToString();
             }
             
 
@@ -510,7 +506,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private unsafe void ProcessBodyIndexFrameData(IntPtr bodyIndexFrameData, uint bodyIndexFrameDataSize)
         {
 
-            uint[] colors = new uint[] { 0xE0E00E, 0xFF3300, 0x47D147, 0x3366FF, 0xFFFF00, 0xFF00FF };
+            uint[] colors = new uint[] { 0xFF3300, 0x47D147, 0xE0E00E, 0x3366FF, 0xFFFF00, 0xFF00FF };
             int numberOfColors = 6;
 
             byte* frameData = (byte*)bodyIndexFrameData;
@@ -529,10 +525,10 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 else
                 {
                     // this pixel is not part of a player
-                    if (numberOfHitsCount == 10)
+                    if (colorCount == 10)
                     {
                         colorAt++;
-                        numberOfHitsCount = 0;
+                        colorCount = 0;
                     }
                     if (colorAt >= numberOfColors)
                     {
@@ -546,10 +542,11 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
         private void PlaySound(MediaPlayer player)
         {
-            var uri = new Uri("C:\\Users\\LabLaptop\\Documents\\HackathonProject\\YorkhillChildrensHospitalKinect\\Kinect Project\\audioFiles\\burst a beat theme.mp3");
-            player.Open(uri);
+            var paths = new Uri("file://" + Directory.GetCurrentDirectory() + "/Audio/babt.mp3", UriKind.Absolute);
+
+            player.Open(paths);
             player.Play();
-            //testBubble.Play();
+            
         }
         
         private void bubbleHit(System.Windows.Shapes.Ellipse b)
@@ -571,31 +568,6 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             b.Opacity = 1.0;
         }
 
-        int randomNumberChooser()
-        {
-            random = new Random();
-            randomNumber = random.Next(0, 7);
-            try
-            {
-                if (VisibleBubbles[randomNumber] == null)
-                {
-                    return randomNumber;
-                }
-
-                if (VisibleBubbles[randomNumber].Visibility != System.Windows.Visibility.Visible)
-                {
-                    return randomNumber;
-                }
-                else {
-                    return randomNumberChooser();
-                }
-            }
-            catch
-            {
-                return randomNumberChooser();
-            }
-        }
-
         private void BubbleShaper(System.Windows.Shapes.Ellipse[] visible)
         {
             Boolean reshuffle = false;
@@ -611,7 +583,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     }
                    else if (b.Opacity > 0)
                     {
-                        b.Opacity = b.Opacity - 0.005;
+                        b.Opacity = b.Opacity - 0.002;
                     }
                     else 
                     {
@@ -632,7 +604,6 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         visible[i] = visible[i + 1];
                         i++;
                     }
-                    //visible[i] = null;
                 }
             }
         }
@@ -659,6 +630,11 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             // on failure, set the status text
             this.StatusText = this.kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText
                                                             : Properties.Resources.SensorNotAvailableStatusText;
+        }
+
+        private void Image_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+
         }
     }
 }
